@@ -1,4 +1,5 @@
 local BLIPS = nil
+local newBlips = {}
 
 BLIPS = {
     Add = function(self)
@@ -13,30 +14,39 @@ BLIPS = {
     SetWayPoint = function(self)
         
     end,
-    Disable = function(self)
+    Disable = function(self, category)
         
     end,
-    Enable = function(self)
+    Enable = function(self, category)
         
     end,
     ShortData = function(self, data)
-        for resource, data in pairs(data) do
-            if not BLIPS.Data[resource] then BLIPS.Data[resource] = {} end
-            for category, data in pairs(data) do
-                if not BLIPS.Data[resource][category] then BLIPS.Data[resource][category] = {} end
-                for id, data in pairs(data) do
-                    if not BLIPS.Data[resource][category][id] then
-                        BLIPS.Data[resource][category][id] = data
-                    end
-                end
-            end
-        end
+        -- for resource, data in pairs(data) do
+        --     if not BLIPS.Data[resource] then BLIPS.Data[resource] = {} end
+        --     for category, data in pairs(data) do
+        --         if not BLIPS.Data[resource][category] then BLIPS.Data[resource][category] = {} end
+        --         for id, data in pairs(data) do
+        --             if not BLIPS.Data[resource][category][id] then
+        --                 BLIPS.Data[resource][category][id] = data
+        --                 newBlips[#newBlips+1] = data
+        --             end
+        --         end
+        --     end
+        -- end
+
     end,
     Data = {}
 }
 
 -- Handlers
 AddEventHandler('esx:onPlayerLogout', BLIPS.RemoveAll)
+
+AddEventHandler('onResourceStart', function(resource)
+    if GetCurrentResourceName() ~= resource  then return end
+    for i = 1, #Config.Categories do
+        BLIPS.Data[Config.Categories[i]] = {}
+    end
+end)
 
 -- Events
 RegisterNetEvent('esx_blips:Collector', function(data)
