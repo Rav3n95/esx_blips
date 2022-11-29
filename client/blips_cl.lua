@@ -19,6 +19,19 @@ BLIPS = {
     Enable = function(self)
         
     end,
+    ShortData = function(self, data)
+        for resource, data in pairs(data) do
+            if not BLIPS.Data[resource] then BLIPS.Data[resource] = {} end
+            for category, data in pairs(data) do
+                if not BLIPS.Data[resource][category] then BLIPS.Data[resource][category] = {} end
+                for id, data in pairs(data) do
+                    if not BLIPS.Data[resource][category][id] then
+                        BLIPS.Data[resource][category][id] = data
+                    end
+                end
+            end
+        end
+    end,
     Data = {}
 }
 
@@ -27,9 +40,7 @@ AddEventHandler('esx:onPlayerLogout', BLIPS.RemoveAll)
 
 -- Events
 RegisterNetEvent('esx_blips:Collector', function(data)
-    BLIPS:RemoveAll()
-    BLIPS.Data = data
-    -- #TODO: If there is data already try not to overwrite all of them?
+    BLIPS:ShortData(data)
 end)
 
 RegisterNetEvent('esx_blips:RemoveAll', BLIPS.RemoveAll)

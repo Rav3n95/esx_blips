@@ -1,7 +1,5 @@
 local BLIPS = nil
 
--- #TODO: Ha nincs id, generáljunk eggyet resource_..math.random(1,1000) stb
-
 BLIPS = {
     IdGenerator = function(self, resource, category)
         local id = resource..'_'..math.random(1,1000)
@@ -44,6 +42,8 @@ BLIPS = {
         TriggerClientEvent('esx_blips:Collector', -1, BLIPS.Data)
     end,
     Exist = function(self, resource, id, category)
+        if not BLIPS.Data[resource] then return false end
+        if not BLIPS.Data[resource][category] then return false end
         if BLIPS.Data[resource][category][id] then return true end
         return false
     end,
@@ -55,13 +55,12 @@ BLIPS = {
             return
         end
 
-        if id == nil then id = BLIPS:IdGenerator(resource, category) end
         if category ~= nil then category = BLIPS:ValidateCategory(category) end
-        if category == nil then category = 'default' end
         if label == nil then label = 'Unnamed' end
         if colour == nil then colour = 0 end
         if scale == nil then scale = 1.0 end
         if sprite == nil then sprite = 1 end
+        if id == nil then id = BLIPS:IdGenerator(resource, category) end
 
         if id and BLIPS:Exist(resource, id, category) then
             print("[^1ERROR^7] ^5ESX Blips^7 blip already exist!")
@@ -74,7 +73,7 @@ BLIPS = {
         for i = 1, #Config.Categories do
             if Config.Categories[i] == category then return category end
         end
-        return nil
+        return 'default'
     end,
     Data = {}
 }
