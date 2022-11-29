@@ -15,9 +15,8 @@ BLIPS = {
     Add = function(self, resource, coords, category, label, colour, scale, sprite, id)
         if not BLIPS.Data[resource] then BLIPS.Data[resource] = {} end
         if not BLIPS.Data[resource][category] then BLIPS.Data[resource][category] = {enabled = true} end
-        if not id then id = BLIPS:IdGenerator(resource, category) end
-
         if not BLIPS.Data[resource][category][id] then BLIPS.Data[resource][category][id] = {} end
+
             BLIPS.Data[resource][category][id] = {
                 coords = coords,
                 label = label,
@@ -56,7 +55,7 @@ BLIPS = {
             return
         end
 
-        if id == nil then id = false end
+        if id == nil then id = BLIPS:IdGenerator(resource, category) end
         if category ~= nil then category = BLIPS:ValidateCategory(category) end
         if category == nil then category = 'default' end
         if label == nil then label = 'Unnamed' end
