@@ -36,7 +36,7 @@ RegisterNetEvent('esx_blips:RemoveAll', BLIPS.RemoveAll)
 
 RegisterCommand('print', function (source, args, raw)
     print(json.encode(BLIPS.Data,{indent=true}))
-end)
+end, false)
 
 function ParsingTable_cl(node)
     --  print('inside')

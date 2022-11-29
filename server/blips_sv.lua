@@ -3,31 +3,28 @@ local BLIPS = nil
 -- #TODO: Ha nincs id, generáljunk eggyet resource_..math.random(1,1000) stb
 
 BLIPS = {
+    IdGenerator = function(self, resource, category)
+        local id = resource..'_'..math.random(1,1000)
+        if BLIPS:Exist(resource, id, category) then
+            BLIPS:IdGenerator(resource, category)
+            return
+        end
+
+        return id
+    end,
     Add = function(self, resource, coords, category, label, colour, scale, sprite, id)
         if not BLIPS.Data[resource] then BLIPS.Data[resource] = {} end
         if not BLIPS.Data[resource][category] then BLIPS.Data[resource][category] = {enabled = true} end
-        if not BLIPS.Data[resource][category]['temp'] then BLIPS.Data[resource][category]['temp'] = {} end
-        
-        if not id then
-            BLIPS.Data[resource][category][#BLIPS.Data[resource][category]+1] = {
+        if not id then id = BLIPS:IdGenerator(resource, category) end
+
+        if not BLIPS.Data[resource][category][id] then BLIPS.Data[resource][category][id] = {} end
+            BLIPS.Data[resource][category][id] = {
                 coords = coords,
-                category = category,
                 label = label,
                 colour = colour,
                 scale = scale,
                 sprite = sprite
             }
-        else
-            if not BLIPS.Data[resource][category]['temp'][id] then BLIPS.Data[resource][category]['temp'][id] = {} end
-            BLIPS.Data[resource][category]['temp'][id] = {
-                coords = coords,
-                category = category,
-                label = label,
-                colour = colour,
-                scale = scale,
-                sprite = sprite
-            }
-        end
 
         BLIPS:Update()
     end,
@@ -40,7 +37,7 @@ BLIPS = {
         if not id then
             BLIPS.Data[resource] = nil
         else
-            BLIPS.Data[resource][category]['temp'][id] = nil
+            BLIPS.Data[resource][category][id] = nil
         end
         BLIPS:Update()
     end,
@@ -48,7 +45,7 @@ BLIPS = {
         TriggerClientEvent('esx_blips:Collector', -1, BLIPS.Data)
     end,
     Exist = function(self, resource, id, category)
-        if BLIPS.Data[resource][category]['temp'][id] then return true end
+        if BLIPS.Data[resource][category][id] then return true end
         return false
     end,
     Validate = function(self, coords, category, label, colour, scale, sprite, id)
@@ -112,4 +109,4 @@ RegisterCommand('blip', function(source)
     TriggerEvent('esx_blips:Add', coords, 'police')
     TriggerEvent('esx_blips:Add', coords, 'ambulance', '1')
     TriggerEvent('esx_blips:Add', coords, 'ambulance', '2')
-end)
+end, false)
