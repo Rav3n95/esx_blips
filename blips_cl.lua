@@ -2,7 +2,7 @@
 -- #TODO: Test whit 2 clients
 
 local BLIPS = nil
-local PlayerLoaded = false
+local PlayerLoaded, menuActivated, keyPressed = false, false, false
 
 BLIPS = {
     Add = function(self, id, coords, label, sprite, size, color, category, temporary)
@@ -152,6 +152,35 @@ BLIPS = {
             self:Remove(id)
         end)
     end,
+    MapChecker = function(self)
+        CreateThread(function()
+            while true do
+                if not menuActivated and IsPauseMenuActive() then
+                    menuActivated = true
+                    ESX.TextUI(Translate('reminder'), 'info')
+                    self:KeyPress()
+                elseif menuActivated and not IsPauseMenuActive() then
+                    menuActivated, keyPressed = false, false
+                    ESX.HideUI()
+                end
+                Wait(1000)
+            end
+        end)
+    end,
+    KeyPress = function(self)
+        CreateThread(function()
+            while menuActivated and not keyPressed do
+                if IsDisabledControlJustReleased(2, 73) then
+                    keyPressed = true
+                    ESX.HideUI()
+                    SendNUIMessage({
+                        showMenu = true
+                    })
+                end
+                Wait(0)
+            end
+        end)
+    end,
     Data = {}
 }
 
@@ -221,6 +250,12 @@ RegisterNetEvent('esx_blips:SetWayPoint', function(...)
     BLIPS:SetWayPoint(...)
 end)
 
+-- NuiCallbacks
+RegisterNUICallback('action', function(data, cb)
+    print(json.encode(data,{indent=true}))
+    cb('ok')
+end)
+
 -- Handlers
 AddEventHandler('esx:onPlayerLogout', function()
     PlayerLoaded = false
@@ -241,5 +276,6 @@ end)
 AddEventHandler('onResourceStart', function(resourceName)
     if GetCurrentResourceName() ~= resourceName then return end
     PlayerLoaded = ESX.PlayerLoaded
+    BLIPS:MapChecker()
     -- #TODO: Request all data from scripts where export called? Is it possible?
 end)

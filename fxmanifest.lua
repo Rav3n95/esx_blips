@@ -8,16 +8,18 @@ version '1.0.0'
 
 shared_scripts {
 	'@es_extended/imports.lua',
+	'@es_extended/locale.lua',
+	'locales/*.lua',
 	'config.lua'
 }
 
 client_script 'blips_cl.lua'
 server_script 'blips_sv.lua'
 
-ui_page 'html/ui.html'
+ui_page 'web/index.html'
 
 files {
-	'html/**',
+	'web/**',
 }
 
 dependency 'es_extended'
