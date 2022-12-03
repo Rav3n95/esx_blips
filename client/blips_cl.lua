@@ -8,6 +8,19 @@ BLIPS = {
             return
         end
 
+        if type(id) == 'table' then
+            for _, data in ipairs(id) do
+                BLIPS:Add(data.id, data.coords, data.category, data.label, data.sprite, data.size, data.color)
+            end
+
+            return
+        end
+
+        if BLIPS.Exist(id) then
+            print("[^1ERROR^7] ^5ESX Blips^7 blip whit this ID already exist!", id)
+            return
+        end
+
         if not coords then
             print("[^1ERROR^7] ^5ESX Blips^7 coords missing!")
             return
@@ -23,31 +36,63 @@ BLIPS = {
         SetBlipSprite(blip, sprite or 1)
         SetBlipScale(blip, size or 0.7)
         SetBlipColour(blip, color or 1)
-        SetBlipAlpha(blip, 255)
+        SetBlipAlpha(blip, 0)
         SetBlipAsShortRange(blip, true)
         BeginTextCommandSetBlipName('STRING')
         AddTextComponentSubstringPlayerName(label)
         EndTextCommandSetBlipName(blip)
 
-        BLIPS.Data[category][id] = {
+        BLIPS.Data[id] = {
             blip = blip,
-            coords = coords
+            coords = coords,
+            category = category
         }
     end,
+    Remove = function(self, id)
+        if not BLIPS:Exist(id) then print("[^1ERROR^7] ^5ESX Blips^7 blip not even exist!", id) return end
+
+        if type(id) == 'table' then
+            for _, data in ipairs(id) do
+                BLIPS:Remove(data)
+            end
+
+            return
+        end
+
+        RemoveBlip(BLIPS.Data[id].blip)
+        BLIPS.Data[id] = nil
+    end,
     Disable = function(self, category)
-        
+        for k, v in pairs(BLIPS.Data) do
+            if v.category == category then
+                SetBlipAlpha(v.blip, 0)
+            end
+        end
     end,
     DisableAll = function(self)
-        
+        for k, v in pairs(BLIPS.Data) do
+            SetBlipAlpha(v.blip, 0)
+        end
     end,
     Enable = function(self, category)
-        
+        for k, v in pairs(BLIPS.Data) do
+            if v.category == category then
+                SetBlipAlpha(v.blip, 255)
+            end
+        end
     end,
     EnableAll = function(self)
-        
+        for k, v in pairs(BLIPS.Data) do
+            SetBlipAlpha(v.blip, 255)
+        end
     end,
-    SetWayPoint = function(self)
-        
+    SetWayPoint = function(self, id)
+        if not BLIPS:Exist(id) then print("[^1ERROR^7] ^5ESX Blips^7 blip not even exist!", id) return end
+        SetNewWaypoint(BLIPS.Data[id].coords.x, BLIPS.Data[id].coords.y)
+    end,
+    Exist = function(self, id)
+        if BLIPS.Data[id] then return true end
+        return false
     end,
     Data = {}
 }
@@ -55,4 +100,4 @@ BLIPS = {
 -- Handlers
 AddEventHandler('esx:onPlayerLogout', BLIPS.DisableAll)
 
-AddEventHandler('esx:playerLoaded', BLIPS.EnableAll)
+AddEventHandler('esx:onPlayerSpawn', BLIPS.EnableAll)
