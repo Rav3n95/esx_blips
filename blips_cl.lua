@@ -1,4 +1,4 @@
--- #TODO: Events, ServerExports, Circle Blips, Nui, Nui backend
+-- #TODO: Events, ServerExports, Nui, Nui backend
 
 local BLIPS = nil
 local PlayerLoaded = false
@@ -6,7 +6,7 @@ local PlayerLoaded = false
 BLIPS = {
     Add = function(self, id, coords, label, sprite, size, color, category, temporary)
         BLIPS:Validate(id, coords, category)
-        
+
         if type(id) == 'table' then
             for _, data in pairs(id) do
                 BLIPS:Add(data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8])
