@@ -1,4 +1,4 @@
--- #TODO: Events, ServerExports, Nui, Nui backend
+-- #TODO: Nui, Nui backend
 -- #TODO: Test whit 2 clients
 
 local BLIPS = nil
@@ -185,6 +185,39 @@ exports("EnableAll",function()
 end)
 
 exports("SetWayPoint",function(...)
+    BLIPS:SetWayPoint(...)
+end)
+
+-- Events
+RegisterNetEvent('esx_blips:Add', function(...)
+    BLIPS:Add(...)
+end)
+
+RegisterNetEvent('esx_blips:AddCircle', function(...)
+    BLIPS:AddCircle(...)
+end)
+
+RegisterNetEvent('esx_blips:Remove', function(...)
+    BLIPS:Remove(...)
+end)
+
+RegisterNetEvent('esx_blips:DisableCategory', function(...)
+    BLIPS:DisableCategory(...)
+end)
+
+RegisterNetEvent('esx_blips:DisableAll', function()
+    BLIPS:DisableAll()
+end)
+
+RegisterNetEvent('esx_blips:EnableCategory', function(...)
+    BLIPS:EnableCategory(...)
+end)
+
+RegisterNetEvent('esx_blips:EnableAll', function()
+    BLIPS:EnableAll()
+end)
+
+RegisterNetEvent('esx_blips:SetWayPoint', function(...)
     BLIPS:SetWayPoint(...)
 end)
 
