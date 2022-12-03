@@ -5,8 +5,8 @@ local PlayerLoaded = false
 
 BLIPS = {
     Add = function(self, id, coords, label, sprite, size, color, category, temporary)
-        if not id then print("[^1ERROR^7] ^5ESX Blips^7 ID missing!") return end
-
+        BLIPS:Validate(id, coords, category)
+        
         if type(id) == 'table' then
             for _, data in pairs(id) do
                 BLIPS:Add(data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8])
@@ -14,14 +14,6 @@ BLIPS = {
 
             return
         end
-
-        if BLIPS:Exist(id) then print("[^1ERROR^7] ^5ESX Blips^7 blip whit this ID already exist!", id) return end
-
-        if not coords then print("[^1ERROR^7] ^5ESX Blips^7 coords missing!") return end
-
-        if not coords.z then coords = vec3(coords.x, coords.y, 0.0) end
-
-        if not category then category = 'default' end
 
         if not label then label = 'unknown '..id end
 
@@ -48,8 +40,32 @@ BLIPS = {
         TriggerEvent('esx_blips:Added', id)
         return id
     end,
-    AddCircle = function (self, id, coords, range, color, category)
-        -- #TODO
+    AddCircle = function (self, id, coords, range, color, category, temporary)
+        BLIPS:Validate(id, coords, category)
+
+        if type(id) == 'table' then
+            for _, data in pairs(id) do
+                BLIPS:AddCircle(data[1], data[2], data[3], data[4], data[5], data[6])
+            end
+
+            return
+        end
+
+        local alpha = PlayerLoaded and 255 or 0
+        local blip = AddBlipForRadius(coords.x, coords.y, coords.z, range or 1)
+        SetBlipColour(blip, color or 1)
+        SetBlipAlpha(blip, alpha)
+
+        BLIPS.Data[id] = {
+            blip = blip,
+            coords = coords,
+            category = category,
+            temporary = temporary
+        }
+
+        if temporary then BLIPS:Temp(id, temporary) end
+        TriggerEvent('esx_blips:Added', id)
+        return id
     end,
     Remove = function(self, id)
         if type(id) == 'table' then
@@ -107,6 +123,17 @@ BLIPS = {
         TriggerEvent('esx_blips:WayPointSet', id)
         return id
     end,
+    Validate = function(self, id, coords, category)
+        if not id then print("[^1ERROR^7] ^5ESX Blips^7 ID missing!") return false end
+        if BLIPS:Exist(id) then print("[^1ERROR^7] ^5ESX Blips^7 blip whit this ID already exist!", id) return false end
+        if not coords then print("[^1ERROR^7] ^5ESX Blips^7 coords missing!") return false end
+
+        if not coords.z then coords = vec3(coords.x, coords.y, 0.0) end
+
+        if not category then category = 'default' end
+
+        return coords, category
+    end,
     Exist = function(self, id)
         if BLIPS.Data[id] then return true end
         return false
@@ -161,7 +188,7 @@ AddEventHandler('esx:onPlayerLogout', function()
     PlayerLoaded = false
     BLIPS:DisableAll()
 
-    for id, data in pairs(BLIPS.Data) do 
+    for id, data in pairs(BLIPS.Data) do
         if data.temporary then
             BLIPS.Remove(id)
         end
