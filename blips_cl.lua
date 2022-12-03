@@ -1,4 +1,5 @@
 -- #TODO: Events, ServerExports, Nui, Nui backend
+-- #TODO: Test whit 2 clients
 
 local BLIPS = nil
 local PlayerLoaded = false
