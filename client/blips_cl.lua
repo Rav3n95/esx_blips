@@ -1,15 +1,15 @@
--- #TODO: Events, ServerExports, Circle Blips, Temprary blips, Nui, Nui backend
+-- #TODO: Events, ServerExports, Circle Blips, Nui, Nui backend
 
 local BLIPS = nil
 local PlayerLoaded = false
 
 BLIPS = {
-    Add = function(self, id, coords, label, sprite, size, color, category)
+    Add = function(self, id, coords, label, sprite, size, color, category, temporary)
         if not id then print("[^1ERROR^7] ^5ESX Blips^7 ID missing!") return end
 
         if type(id) == 'table' then
             for _, data in pairs(id) do
-                BLIPS:Add(data[1], data[2], data[3], data[4], data[5], data[6], data[7])
+                BLIPS:Add(data[1], data[2], data[3], data[4], data[5], data[6], data[7], data[8])
             end
 
             return
@@ -37,13 +37,14 @@ BLIPS = {
         AddTextComponentSubstringPlayerName(label)
         EndTextCommandSetBlipName(blip)
 
-
         BLIPS.Data[id] = {
             blip = blip,
             coords = coords,
-            category = category
+            category = category,
+            temporary = temporary
         }
 
+        if temporary then BLIPS:Temp(id, temporary) end
         TriggerEvent('esx_blips:Added', id)
         return id
     end,
@@ -110,6 +111,19 @@ BLIPS = {
         if BLIPS.Data[id] then return true end
         return false
     end,
+    Temp = function(self, id, temporary)
+        CreateThread(function()
+            while temporary ~= 0 do
+                temporary = temporary-1
+                if temporary <= 2550 then
+                    local alpha = math.floor(temporary / 10)
+                    SetBlipAlpha(BLIPS.Data[id].blip, alpha)
+                end
+                Wait(1)
+            end
+            BLIPS:Remove(id)
+        end)
+    end,
     Data = {}
 }
 
@@ -146,6 +160,12 @@ end)
 AddEventHandler('esx:onPlayerLogout', function()
     PlayerLoaded = false
     BLIPS:DisableAll()
+
+    for id, data in pairs(BLIPS.Data) do 
+        if data.temporary then
+            BLIPS.Remove(id)
+        end
+    end
 end)
 
 AddEventHandler('esx:onPlayerSpawn', function()
