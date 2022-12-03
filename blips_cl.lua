@@ -37,7 +37,7 @@ BLIPS = {
             temporary = temporary
         }
 
-        if temporary then BLIPS:Temp(id, temporary) end
+        if temporary then self:Temp(id, temporary) end
         TriggerEvent('esx_blips:Added', id)
         return id
     end,
@@ -64,21 +64,21 @@ BLIPS = {
             temporary = temporary
         }
 
-        if temporary then BLIPS:Temp(id, temporary) end
+        if temporary then self:Temp(id, temporary) end
         TriggerEvent('esx_blips:Added', id)
         return id
     end,
     Remove = function(self, id)
         if type(id) == 'table' then
             for _, data in pairs(id) do
-                if not BLIPS:Exist(data[1]) then print("[^1ERROR^7] ^5ESX Blips^7 blip not even exist!", id) return end
-                BLIPS:Remove(data[1])
+                if not self:Exist(data[1]) then print("[^1ERROR^7] ^5ESX Blips^7 blip not even exist!", id) return end
+                self:Remove(data[1])
             end
 
             return
         end
 
-        if not BLIPS:Exist(id) then print("[^1ERROR^7] ^5ESX Blips^7 blip not even exist!", id) return end
+        if not self:Exist(id) then print("[^1ERROR^7] ^5ESX Blips^7 blip not even exist!", id) return end
         RemoveBlip(BLIPS.Data[id].blip)
         BLIPS.Data[id] = nil
 
@@ -118,7 +118,7 @@ BLIPS = {
         TriggerEvent('esx_blips:AllEnabled')
     end,
     SetWayPoint = function(self, id)
-        if not BLIPS:Exist(id) then print("[^1ERROR^7] ^5ESX Blips^7 blip not even exist!", id) return end
+        if not self:Exist(id) then print("[^1ERROR^7] ^5ESX Blips^7 blip not even exist!", id) return end
         SetNewWaypoint(BLIPS.Data[id].coords.x, BLIPS.Data[id].coords.y)
 
         TriggerEvent('esx_blips:WayPointSet', id)
@@ -126,7 +126,7 @@ BLIPS = {
     end,
     Validate = function(self, id, coords, category)
         if not id then print("[^1ERROR^7] ^5ESX Blips^7 ID missing!") return false end
-        if BLIPS:Exist(id) then print("[^1ERROR^7] ^5ESX Blips^7 blip whit this ID already exist!", id) return false end
+        if self:Exist(id) then print("[^1ERROR^7] ^5ESX Blips^7 blip whit this ID already exist!", id) return false end
         if not coords then print("[^1ERROR^7] ^5ESX Blips^7 coords missing!") return false end
 
         if not coords.z then coords = vec3(coords.x, coords.y, 0.0) end
@@ -149,7 +149,7 @@ BLIPS = {
                 end
                 Wait(1)
             end
-            BLIPS:Remove(id)
+            self:Remove(id)
         end)
     end,
     Data = {}
