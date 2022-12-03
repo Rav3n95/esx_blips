@@ -11,9 +11,8 @@ shared_scripts {
 	'config.lua'
 }
 
-client_scripts {
-	'client/*.lua'
-}
+client_script 'blips_cl.lua'
+server_script 'blips_sv.lua'
 
 ui_page 'html/ui.html'
 
