@@ -1,3 +1,5 @@
+-- #TODO: Events, ServerExports, Circle Blips, Temprary blips, Nui, Nui backend
+
 local BLIPS = nil
 local PlayerLoaded = false
 
@@ -44,6 +46,9 @@ BLIPS = {
 
         TriggerEvent('esx_blips:Added', id)
         return id
+    end,
+    AddCircle = function (self, id, coords, range, color, category)
+        -- #TODO
     end,
     Remove = function(self, id)
         if type(id) == 'table' then
@@ -151,4 +156,5 @@ end)
 AddEventHandler('onResourceStart', function(resourceName)
     if GetCurrentResourceName() ~= resourceName then return end
     PlayerLoaded = ESX.PlayerLoaded
+    -- #TODO: Request all data from scripts where export called? Is it possible?
 end)
