@@ -16,10 +16,10 @@ shared_scripts {
 client_script 'blips_cl.lua'
 server_script 'blips_sv.lua'
 
-ui_page 'web/index.html'
+ui_page 'web/dist/index.html'
 
 files {
-	'web/**',
+	'web/dist/**',
 }
 
 dependency 'es_extended'
