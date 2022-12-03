@@ -160,6 +160,10 @@ exports("Add",function(...)
     BLIPS:Add(...)
 end)
 
+exports("AddCircle",function(...)
+    BLIPS:AddCircle(...)
+end)
+
 exports("Remove",function(...)
     BLIPS:Remove(...)
 end)
