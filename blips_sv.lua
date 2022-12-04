@@ -10,20 +10,12 @@ exports("Remove",function(playerId, ...)
     TriggerClientEvent('esx_blips:Remove', playerId, ...)
 end)
 
-exports("DisableCategory",function(playerId, ...)
-    TriggerClientEvent('esx_blips:DisableCategory', playerId, ...)
+exports("ChangeAllState",function(playerId, ...)
+    TriggerClientEvent('esx_blips:ChangeAllState', playerId, ...))
 end)
 
-exports("DisableAll",function(playerId)
-    TriggerClientEvent('esx_blips:DisableAll', playerId)
-end)
-
-exports("EnableCategory",function(playerId, ...)
-    TriggerClientEvent('esx_blips:EnableCategory', playerId, ...)
-end)
-
-exports("EnableAll",function(playerId)
-    TriggerClientEvent('esx_blips:EnableAll', playerId)
+exports("ChangeCategoryState",function(playerId, ...)
+    TriggerClientEvent('esx_blips:ChangeCategoryState', playerId, ...)
 end)
 
 exports("SetWayPoint",function(playerId, ...)

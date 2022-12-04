@@ -209,10 +209,6 @@ exports("ChangeCategoryState",function(...)
     BLIPS:ChangeCategoryState(...)
 end)
 
-exports("EnableAll",function()
-    BLIPS:EnableAll()
-end)
-
 exports("SetWayPoint",function(...)
     BLIPS:SetWayPoint(...)
 end)
