@@ -11,7 +11,7 @@ exports("Remove",function(playerId, ...)
 end)
 
 exports("ChangeAllState",function(playerId, ...)
-    TriggerClientEvent('esx_blips:ChangeAllState', playerId, ...))
+    TriggerClientEvent('esx_blips:ChangeAllState', playerId, ...)
 end)
 
 exports("ChangeCategoryState",function(playerId, ...)
