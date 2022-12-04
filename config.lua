@@ -1,12 +1,2 @@
-Config = {
-    Categories = {
-        'default',
-        'shop',
-        'garage',
-        'service',
-        'food',
-        'criminal',
-        'police',
-        'ambulance'
-    }
-}
+--Config = {Locale = GetConvar('esx:locale', 'en')}
+Config = {Locale = 'hu'}

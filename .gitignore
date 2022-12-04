@@ -1,1 +1,3 @@
 .vscode
+web/node_modules
+web/dist
