@@ -49,12 +49,11 @@ BLIPS = {
 
             return
         end
-
         valid, coords, category = self:Validate(id, coords, category)
         if not valid then return end
 
         local alpha = PlayerLoaded and 255 or 0
-        local blip = AddBlipForRadius(coords.x, coords.y, coords.z, range or 1)
+        local blip = AddBlipForRadius(coords.x, coords.y, coords.z, range or 100.0)
         SetBlipColour(blip, color or 1)
         SetBlipAlpha(blip, alpha)
 
