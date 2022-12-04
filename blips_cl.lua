@@ -1,6 +1,6 @@
 local BLIPS = nil
 local PlayerLoaded, menuActivated, keyPressed = false, false, false
-local Categories = {Translate('default')}
+local Categories = { Translate('default') }
 BLIPS = {
     Add = function(self, id, coords, label, sprite, size, color, category, temporary)
         local valid = false
@@ -15,7 +15,7 @@ BLIPS = {
         valid, coords, category = self:Validate(id, coords, category)
         if not valid then return end
 
-        if not label then label = 'unknown '..id end
+        if not label then label = 'unknown ' .. id end
 
         local alpha = PlayerLoaded and 255 or 0
 
@@ -40,7 +40,7 @@ BLIPS = {
         TriggerEvent('esx_blips:Added', id)
         return id
     end,
-    AddCircle = function (self, id, coords, range, color, category, temporary)
+    AddCircle = function(self, id, coords, range, color, category, temporary)
         local valid = false
         if type(id) == 'table' then
             for _, data in pairs(id) do
@@ -89,7 +89,7 @@ BLIPS = {
     ChangeAllState = function(self, state)
         for k, v in pairs(BLIPS.Data) do
             SetBlipAlpha(v.blip, state and 255 or 0)
-            SendNUIMessage({type = "updateCategoryState", cat = k, value = state})
+            SendNUIMessage({ type = "updateCategoryState", cat = k, value = state })
         end
         TriggerEvent('esx_blips:ChangeAllStateSet')
     end,
@@ -97,7 +97,7 @@ BLIPS = {
         for k, v in pairs(BLIPS.Data) do
             if not v.temporary and v.category == category then
                 SetBlipAlpha(v.blip, state and 255 or 0)
-                SendNUIMessage({type = "updateCategoryState", cat = category, value = state})
+                SendNUIMessage({ type = "updateCategoryState", cat = category, value = state })
             end
         end
 
@@ -113,20 +113,20 @@ BLIPS = {
     end,
     SortCategories = function(self, category)
         local tempTable = {}
-        
+
         for i = 1, #Categories do
-            Categories[#Categories+1] = category
+            Categories[#Categories + 1] = category
         end
         table.sort(Categories)
 
-        for k,v in pairs(Categories) do
-            if v ~= Categories[k+1] then
+        for k, v in pairs(Categories) do
+            if v ~= Categories[k + 1] then
                 table.insert(tempTable, v)
             end
         end
 
         Categories = tempTable
-        SendNUIMessage({type = "updateData", title = Translate('title'), value = Categories})
+        SendNUIMessage({ type = "updateData", title = Translate('title'), value = Categories })
     end,
     Validate = function(self, id, coords, category)
         if not id then print("[^1ERROR^7] ^5ESX Blips^7 ID missing!") return false end
@@ -147,7 +147,7 @@ BLIPS = {
     Temp = function(self, id, temporary)
         CreateThread(function()
             while temporary ~= 0 do
-                temporary = temporary-1
+                temporary = temporary - 1
                 if temporary <= 2550 then
                     local alpha = math.floor(temporary / 10)
                     SetBlipAlpha(BLIPS.Data[id].blip, alpha)
@@ -162,11 +162,11 @@ BLIPS = {
             while true do
                 if not menuActivated and IsPauseMenuActive() then
                     menuActivated = true
-                    SendNUIMessage({type = "showNotify", value = true, text = Translate("reminder")})
+                    SendNUIMessage({ type = "showNotify", value = true, text = Translate("reminder") })
                     self:KeyPress()
                 elseif menuActivated and not IsPauseMenuActive() then
                     menuActivated, keyPressed = false, false
-                    SendNUIMessage({type = "showNotify", value = false})
+                    SendNUIMessage({ type = "showNotify", value = false })
                 end
                 Wait(200)
             end
@@ -177,8 +177,8 @@ BLIPS = {
             while menuActivated and not keyPressed do
                 if IsDisabledControlJustReleased(2, 73) then
                     keyPressed = true
-                    SendNUIMessage({type = "showNotify", value = false})
-                    SendNUIMessage({type = "showMenu", value = true})
+                    SendNUIMessage({ type = "showNotify", value = false })
+                    SendNUIMessage({ type = "showMenu", value = true })
                     SetNuiFocus(true, true)
                 end
                 Wait(0)
@@ -189,27 +189,27 @@ BLIPS = {
 }
 
 -- Exports
-exports("Add",function(...)
+exports("Add", function(...)
     BLIPS:Add(...)
 end)
 
-exports("AddCircle",function(...)
+exports("AddCircle", function(...)
     BLIPS:AddCircle(...)
 end)
 
-exports("Remove",function(...)
+exports("Remove", function(...)
     BLIPS:Remove(...)
 end)
 
-exports("ChangeAllState",function(...)
+exports("ChangeAllState", function(...)
     BLIPS:ChangeAllState(...)
 end)
 
-exports("ChangeCategoryState",function(...)
+exports("ChangeCategoryState", function(...)
     BLIPS:ChangeCategoryState(...)
 end)
 
-exports("SetWayPoint",function(...)
+exports("SetWayPoint", function(...)
     BLIPS:SetWayPoint(...)
 end)
 
@@ -236,7 +236,7 @@ end)
 
 -- NuiCallbacks
 RegisterNUICallback('documentReady', function(data, cb)
-    cb({title = Translate('title'), value = Categories})
+    cb({ title = Translate('title'), value = Categories })
 end)
 
 RegisterNUICallback('action', function(data)
@@ -246,7 +246,7 @@ RegisterNUICallback('action', function(data)
 end)
 
 RegisterNUICallback('close', function()
-    SendNUIMessage({type = "showMenu", value = false})
+    SendNUIMessage({ type = "showMenu", value = false })
     SetNuiFocus(false, false)
 end)
 
